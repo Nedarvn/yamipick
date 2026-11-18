@@ -1,0 +1,1098 @@
+@import url("https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap");
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  direction: rtl;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  font-family: "Vazirmatn", sans-serif;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.app {
+  min-height: 100vh;
+  background: #fffaf6;
+  color: #403633;
+  font-family: "Vazirmatn", sans-serif;
+  padding-bottom: 100px;
+}
+
+.topbar {
+  height: 76px;
+  padding: 0 7%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border-bottom: 1px solid #f5eeea;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 23px;
+  font-weight: 800;
+  color: #e66b78;
+  direction: ltr;
+}
+
+.brand-icon {
+  font-size: 27px;
+}
+
+.profile {
+  border: 0;
+  background: #fff0e9;
+  border-radius: 50%;
+  width: 43px;
+  height: 43px;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.main-content {
+  max-width: 900px;
+  margin: 35px auto;
+  padding: 0 24px;
+}
+
+.welcome {
+  background: linear-gradient(115deg, #ffe5dc, #fff0d9);
+  border-radius: 25px;
+  padding: 30px 35px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+.eyebrow {
+  color: #bd7770;
+  font-size: 13px;
+  margin: 0 0 8px;
+}
+
+.welcome h1 {
+  font-size: 26px;
+  margin: 0;
+  font-weight: 800;
+}
+
+.subtitle {
+  color: #8d7770;
+  font-size: 14px;
+  margin-bottom: 0;
+}
+
+.welcome-emoji {
+  font-size: 65px;
+}
+
+.week-section {
+  margin-top: 38px;
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.section-heading h2 {
+  margin: 0;
+  font-size: 19px;
+}
+
+.section-heading p {
+  color: #a4958e;
+  font-size: 13px;
+  margin: 5px 0 0;
+}
+
+.calendar-button {
+  border: 1px solid #f0dcd3;
+  background: white;
+  padding: 10px 15px;
+  border-radius: 12px;
+  color: #956c62;
+  cursor: pointer;
+}
+
+.week-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 9px;
+}
+
+.day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 4px;
+  border: 1px solid #f1e9e3;
+  border-radius: 15px;
+  background: #fff;
+  color: #8c7c75;
+  cursor: pointer;
+}
+
+.day span {
+  font-size: 11px;
+}
+
+.day strong {
+  font-size: 17px;
+}
+
+.day.active {
+  background: #e87983;
+  color: white;
+  border-color: #e87983;
+  box-shadow: 0 5px 14px #e8798340;
+}
+
+.meals {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-top: 28px;
+}
+
+.meal-card {
+  padding: 22px;
+  border-radius: 20px;
+  min-height: 190px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.lunch {
+  background: #fff1dc;
+}
+
+.dinner {
+  background: #eeeaff;
+}
+
+.meal-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.meal-icon {
+  font-size: 28px;
+}
+
+.meal-label {
+  color: #9c8177;
+  font-size: 12px;
+}
+
+.meal-card h3 {
+  font-size: 17px;
+  margin: 5px 0;
+}
+
+.meal-card p {
+  color: #9b8d86;
+  font-size: 12px;
+  margin: 0;
+}
+
+.meal-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.add-button {
+  align-self: flex-start;
+  border: 0;
+  border-radius: 10px;
+  padding: 9px 14px;
+  background: #fff;
+  color: #d56f78;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.delete-button {
+  border: 0;
+  background: #ffffffa8;
+  color: #c65c64;
+  border-radius: 10px;
+  padding: 9px 13px;
+  cursor: pointer;
+}
+
+.tip {
+  margin-top: 22px;
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f1f8e9;
+  border-radius: 14px;
+  color: #71865d;
+  font-size: 13px;
+}
+
+.tip p {
+  margin: 0;
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  height: 75px;
+  background: #fff;
+  border-top: 1px solid #f1eae5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 65px;
+  z-index: 10;
+}
+
+.nav-item {
+  border: 0;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: #a99a94;
+  cursor: pointer;
+}
+
+.nav-item span {
+  font-size: 21px;
+}
+
+.nav-item small {
+  font-size: 11px;
+}
+
+.nav-item.selected {
+  color: #e87983;
+  font-weight: 700;
+}
+
+/* پنجره افزودن غذا */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: #30252280;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  z-index: 20;
+}
+
+.food-modal {
+  width: 100%;
+  max-width: 400px;
+  background: white;
+  border-radius: 24px;
+  padding: 30px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 15px 50px #0002;
+}
+
+.close-modal {
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  border: 0;
+  background: transparent;
+  font-size: 27px;
+  color: #998b84;
+  cursor: pointer;
+}
+
+.modal-emoji {
+  font-size: 42px;
+}
+
+.food-modal h2 {
+  font-size: 20px;
+  margin: 12px 0 5px;
+}
+
+.food-modal p {
+  color: #998b84;
+  font-size: 13px;
+}
+
+.food-modal input {
+  width: 100%;
+  padding: 14px;
+  margin: 15px 0;
+  border: 1px solid #eaded8;
+  border-radius: 12px;
+  outline: none;
+  font-size: 14px;
+  text-align: right;
+}
+
+.food-modal input:focus {
+  border-color: #e87983;
+}
+
+.save-food {
+  width: 100%;
+  padding: 13px;
+  border: 0;
+  border-radius: 12px;
+  background: #e87983;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+@media (max-width: 650px) {
+  .topbar {
+    padding: 0 20px;
+  }
+
+  .main-content {
+    margin-top: 20px;
+    padding: 0 15px;
+  }
+
+  .welcome {
+    padding: 22px;
+  }
+
+  .welcome h1 {
+    font-size: 20px;
+  }
+
+  .welcome-emoji {
+    font-size: 45px;
+  }
+
+  .week-days {
+    gap: 5px;
+  }
+
+  .day {
+    padding: 10px 2px;
+    border-radius: 11px;
+  }
+
+  .day span {
+    font-size: 9px;
+  }
+
+  .day strong {
+    font-size: 14px;
+  }
+
+  .meals {
+    grid-template-columns: 1fr;
+  }
+
+  .bottom-nav {
+    gap: 0;
+    justify-content: space-around;
+  }
+}
+
+.food-bank {
+  margin-top: 30px;
+  padding: 25px;
+  background: #fff;
+  border: 1px solid #f2e8e2;
+  border-radius: 22px;
+}
+
+.food-bank-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.food-bank-heading h2 {
+  font-size: 19px;
+  margin: 0;
+}
+
+.food-bank-heading p {
+  font-size: 12px;
+  color: #a4958e;
+  margin: 6px 0 0;
+}
+
+.food-count {
+  background: #fff0e9;
+  color: #d56f78;
+  padding: 7px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.food-input-row {
+  display: flex;
+  gap: 10px;
+}
+
+.food-input-row input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #eaded8;
+  border-radius: 12px;
+  outline: none;
+}
+
+.food-input-row input:focus {
+  border-color: #e87983;
+}
+
+.food-input-row button {
+  border: 0;
+  border-radius: 12px;
+  padding: 10px 16px;
+  background: #e87983;
+  color: white;
+  cursor: pointer;
+}
+
+.empty-foods {
+  text-align: center;
+  padding: 25px 10px;
+  color: #a4958e;
+  font-size: 13px;
+}
+
+.empty-foods span {
+  font-size: 35px;
+}
+
+.food-list {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.food-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 13px;
+  background: #fffaf6;
+  border-radius: 13px;
+}
+
+.food-name {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 14px;
+}
+
+.food-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.food-item-actions button {
+  border: 0;
+  border-radius: 8px;
+  padding: 7px 9px;
+  background: #fff;
+  color: #9c7770;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.food-item-actions .remove-food {
+  color: #d56f78;
+}
+
+@media (max-width: 650px) {
+  .food-bank {
+    padding: 17px;
+  }
+
+  .food-item {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .food-item-actions {
+    width: 100%;
+  }
+
+  .food-input-row button {
+    padding: 9px;
+    font-size: 12px;
+  }
+}
+
+.food-bank {
+  margin-top: 30px;
+  padding: 25px;
+  background: #fff;
+  border: 1px solid #f2e8e2;
+  border-radius: 22px;
+}
+
+.food-bank-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.food-bank-heading h2 {
+  font-size: 19px;
+  margin: 0;
+}
+
+.food-bank-heading p {
+  font-size: 12px;
+  color: #a4958e;
+  margin: 6px 0 0;
+}
+
+.food-count {
+  background: #fff0e9;
+  color: #d56f78;
+  padding: 7px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.food-input-row {
+  display: flex;
+  gap: 10px;
+}
+
+.food-input-row input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #eaded8;
+  border-radius: 12px;
+  outline: none;
+}
+
+.food-input-row button {
+  border: 0;
+  border-radius: 12px;
+  padding: 10px 16px;
+  background: #e87983;
+  color: white;
+  cursor: pointer;
+}
+
+.empty-foods {
+  text-align: center;
+  padding: 25px 10px;
+  color: #a4958e;
+  font-size: 13px;
+}
+
+.empty-foods span {
+  font-size: 35px;
+}
+
+.food-list {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.food-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 13px;
+  background: #fffaf6;
+  border-radius: 13px;
+}
+
+.food-name {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 14px;
+}
+
+.food-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.food-item-actions button {
+  border: 0;
+  border-radius: 8px;
+  padding: 7px 9px;
+  background: #fff;
+  color: #9c7770;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.food-item-actions .remove-food {
+  color: #d56f78;
+}
+
+@media (max-width: 650px) {
+  .food-bank {
+    padding: 17px;
+  }
+
+  .food-item {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .food-item-actions {
+    width: 100%;
+  }
+}
+.no-food-result {
+  text-align: center;
+  color: #a4958e;
+  font-size: 13px;
+  padding: 15px;
+}
+.shopping-section {
+  margin-top: 25px;
+  padding: 25px;
+  background: #fff;
+  border: 1px solid #f2e8e2;
+  border-radius: 22px;
+}
+
+.shopping-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.shopping-heading h2 {
+  font-size: 19px;
+  margin: 0;
+}
+
+.shopping-heading p {
+  font-size: 12px;
+  color: #a4958e;
+  margin-top: 6px;
+}
+
+.shopping-count {
+  background: #fff0e9;
+  color: #d56f78;
+  padding: 7px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.shopping-input-row {
+  display: flex;
+  gap: 10px;
+}
+
+.shopping-input-row input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #eaded8;
+  border-radius: 12px;
+  outline: none;
+  font-family: inherit;
+}
+
+.shopping-input-row button {
+  border: 0;
+  border-radius: 12px;
+  padding: 10px 16px;
+  background: #e87983;
+  color: white;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.empty-shopping {
+  text-align: center;
+  padding: 25px;
+  color: #a4958e;
+  font-size: 13px;
+}
+
+.empty-shopping span {
+  font-size: 35px;
+}
+
+.shopping-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.shopping-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px;
+  background: #fffaf6;
+  border-radius: 12px;
+}
+
+.shopping-item-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.shopping-item-name input {
+  accent-color: #e87983;
+  width: 17px;
+  height: 17px;
+}
+
+.shopping-item.purchased .shopping-item-name span {
+  text-decoration: line-through;
+  color: #aaa;
+}
+
+.shopping-delete {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+@media (max-width: 650px) {
+  .shopping-section {
+    padding: 17px;
+  }
+}
+/* Weekly Meal Planner */
+
+.weekly-overview {
+  margin-top: 25px;
+  padding: 20px;
+  background: #fff;
+  border: 1px solid #f2e8e2;
+  border-radius: 18px;
+}
+
+.weekly-heading {
+  margin-bottom: 15px;
+}
+
+.weekly-heading h2 {
+  font-size: 19px;
+  margin: 0;
+  color: #594b48;
+}
+
+.weekly-heading p {
+  font-size: 12px;
+  color: #a4958e;
+  margin: 6px 0 0;
+}
+
+.weekly-grid {
+  display: flex;
+  flex-direction: column;
+}
+
+.weekly-day-card {
+  display: grid;
+  grid-template-columns: 65px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f3ece7;
+}
+
+.weekly-day-card:last-child {
+  border-bottom: none;
+}
+
+.weekly-day-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 12px;
+  color: #594b48;
+}
+
+.weekly-day-heading span {
+  color: #d56f78;
+  font-size: 11px;
+}
+
+.weekly-meals {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.weekly-meal-button {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  min-width: 0;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 12px;
+  text-align: right;
+  cursor: pointer;
+}
+
+.weekly-meal-button span:last-child {
+  overflow-wrap: anywhere;
+}
+
+.lunch-meal {
+  background: #fff5e9;
+  color: #a87940;
+}
+
+.dinner-meal {
+  background: #f2efff;
+  color: #8170b5;
+}
+
+.weekly-meal-button:hover {
+  filter: brightness(0.97);
+}
+
+@media (max-width: 420px) {
+  .weekly-overview {
+    padding: 14px;
+  }
+
+  .weekly-day-card {
+    grid-template-columns: 55px minmax(0, 1fr);
+    gap: 7px;
+  }
+
+  .weekly-meal-button {
+    font-size: 11px;
+  }
+}
+
+/* اصلاحات بانک غذا و پنجره افزودن به برنامه */
+.food-search {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+  padding: 12px 14px;
+  border: 1px solid #eaded8;
+  border-radius: 12px;
+  outline: none;
+  font-family: inherit;
+  font-size: 13px;
+  background: #fff;
+  text-align: right;
+}
+
+.food-search:focus,
+.assignment-select:focus {
+  border-color: #e87983;
+}
+
+.food-item-actions .assign-food-button {
+  padding: 9px 14px;
+  background: #fff0e9;
+  color: #d56f78;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.assignment-label {
+  display: block;
+  margin: 12px 0 7px;
+  text-align: right;
+  color: #806e67;
+  font-size: 13px;
+}
+
+.assignment-select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #eaded8;
+  border-radius: 12px;
+  background: #fff;
+  color: #403633;
+  font: inherit;
+  text-align: right;
+  outline: none;
+}
+
+.selected-food-name {
+  margin: 8px 0 18px !important;
+  padding: 10px;
+  border-radius: 10px;
+  background: #fffaf6;
+  color: #d56f78 !important;
+  font-weight: 700;
+}
+
+.food-modal .save-food {
+  margin-top: 18px;
+  font-family: inherit;
+}
+
+@media (max-width: 650px) {
+  .food-item-actions .assign-food-button {
+    width: 100%;
+  }
+}
+
+/* اصلاح چیدمان انتخاب هفته */
+.week-navigation {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.week-navigation button {
+  border: 1px solid #f0dcd3;
+  background: #fff;
+  color: #956c62;
+  padding: 9px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.week-navigation button:hover {
+  background: #e87983;
+  color: white;
+  border-color: #e87983;
+}
+
+/* چیدمان ناهار و شام روز انتخاب‌شده */
+.daily-meals {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 26px;
+}
+
+.daily-meals > h3 {
+  grid-column: 1 / -1;
+  margin: 0 0 4px;
+  font-size: 18px;
+}
+
+.daily-meals .meal-card {
+  min-width: 0;
+  min-height: 170px;
+}
+
+.daily-meals .lunch-card {
+  background: #fff1dc;
+}
+
+.daily-meals .dinner-card {
+  background: #eeeaff;
+}
+
+/* نمایش مناسب در موبایل */
+@media (max-width: 600px) {
+  .week-navigation {
+    gap: 7px;
+  }
+
+  .week-navigation button {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  .daily-meals {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* چیدمان دو ستونه برنامه هفتگی و بانک غذا */
+.planning-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 22px;
+  align-items: start;
+  margin-top: 24px;
+}
+
+.planning-layout .weekly-overview,
+.planning-layout .food-bank {
+  margin-top: 0;
+  min-width: 0;
+}
+
+/* نمایش تک ستونه در موبایل و صفحه‌های کوچک */
+@media (max-width: 800px) {
+  .planning-layout {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+/* کادر برنامه روز انتخاب‌شده */
+.daily-meals {
+  background: #94e9b7;
+  border: 1px solid #f0e5df;
+  border-radius: 20px;
+  padding: 22px;
+  margin-top: 26px;
+  box-shadow: 0 4px 16px rgba(120, 90, 75, 0.04);
+}
+
+.daily-meals > h3 {
+  margin-bottom: 8px;
+}
+
+@media (max-width: 600px) {
+  .daily-meals {
+    padding: 15px;
+    border-radius: 16px;
+  }
+}
