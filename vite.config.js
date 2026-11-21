@@ -8,7 +8,11 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["favicon.ico"],
+      includeAssets: [
+        "favicon-16x16.png",
+        "favicon-32x32.png",
+        "apple-touch-icon.png",
+      ],
       manifest: {
         name: "YamiPick",
         short_name: "YamiPick",
