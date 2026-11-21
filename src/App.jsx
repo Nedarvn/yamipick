@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { supabase } from "./lib/supabase";
 import "./App.css";
 
 const dayNames = [
@@ -31,7 +32,13 @@ const getDateKey = (date) => {
 };
 
 function App() {
-  const [selectedDay, setSelectedDay] = useState(4);
+  const [selectedDay, setSelectedDay] = useState(() => {
+    const saved = localStorage.getItem("yamipick-selected-day");
+    return saved !== null ? Number(saved) : 0;
+  });
+  useEffect(() => {
+    localStorage.setItem("yamipick-selected-day", selectedDay);
+  }, [selectedDay]);
   const [weekOffset, setWeekOffset] = useState(0);
   const [modalDay, setModalDay] = useState(0);
 
@@ -78,6 +85,26 @@ function App() {
   const [foodName, setFoodName] = useState("");
   const [selectedFood, setSelectedFood] = useState("");
   const [assignmentMeal, setAssignmentMeal] = useState("lunch");
+  const [session, setSession] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
+
+  const [authMode, setAuthMode] = useState("login");
+  const [authEmail, setAuthEmail] = useState("");
+  const [authPassword, setAuthPassword] = useState("");
+  const [authMessage, setAuthMessage] = useState("");
+  const [authBusy, setAuthBusy] = useState(false);
+  const [households, setHouseholds] = useState([]);
+  const [activeHousehold, setActiveHousehold] = useState(null);
+  const [dataLoading, setDataLoading] = useState(false);
+  const [dataMessage, setDataMessage] = useState("");
+  const [householdBusy, setHouseholdBusy] = useState(false);
+  const [householdMessage, setHouseholdMessage] = useState("");
+  const [householdName, setHouseholdName] = useState("");
+  const [householdLoading, setHouseholdLoading] = useState(true);
+  const [inviteCodeInput, setInviteCodeInput] = useState("");
+  const [showAccount, setShowAccount] = useState(false);
+
+  const [copiedInviteCode, setCopiedInviteCode] = useState(null);
   const weekDays = dayNames.map((name, index) => {
     const date = getWeekStart(weekOffset);
     date.setDate(date.getDate() + index);
@@ -102,6 +129,416 @@ function App() {
 
   const weekTitle = `${weekMonth} ${weekYear}`;
   const days = weekDays;
+  const loadHouseholds = async (userId) => {
+    if (!userId) {
+      setHouseholds([]);
+      setActiveHousehold(null);
+      setHouseholdLoading(false);
+      return [];
+    }
+
+    setHouseholdLoading(true);
+
+    try {
+      const { data, error } = await supabase
+        .from("household_members")
+        .select("household_id, role, households(id, name, invite_code)")
+        .eq("user_id", userId);
+
+      if (error) throw error;
+
+      const list = (data || [])
+        .map((item) => {
+          const home = Array.isArray(item.households)
+            ? item.households[0]
+            : item.households;
+
+          return home ? { ...home, role: item.role } : null;
+        })
+        .filter(Boolean);
+
+      setHouseholds(list);
+
+      setActiveHousehold(
+        (current) =>
+          list.find((item) => item.id === current?.id) || list[0] || null,
+      );
+
+      return list;
+    } catch (error) {
+      setHouseholdMessage(error.message);
+      return [];
+    } finally {
+      setHouseholdLoading(false);
+    }
+  };
+  useEffect(() => {
+    if (session?.user?.id) {
+      loadHouseholds(session.user.id);
+    } else {
+      setHouseholds([]);
+      setActiveHousehold(null);
+      setHouseholdLoading(false);
+    }
+  }, [session]);
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadHouseholdData = async () => {
+      if (!session?.user?.id || !activeHousehold?.id) return;
+
+      setDataLoading(true);
+      setDataMessage("");
+
+      try {
+        const householdId = activeHousehold.id;
+
+        const fetchRemoteData = async () => {
+          const [mealsResult, foodsResult, shoppingResult] = await Promise.all([
+            supabase
+              .from("meal_entries")
+              .select("meal_date, meal_type, food_name")
+              .eq("household_id", householdId)
+              .order("meal_date", { ascending: true }),
+
+            supabase
+              .from("foods")
+              .select("id, name")
+              .eq("household_id", householdId)
+              .order("created_at", { ascending: true }),
+
+            supabase
+              .from("shopping_items")
+              .select("id, name, purchased")
+              .eq("household_id", householdId)
+              .order("created_at", { ascending: true }),
+          ]);
+
+          if (mealsResult.error) throw mealsResult.error;
+          if (foodsResult.error) throw foodsResult.error;
+          if (shoppingResult.error) throw shoppingResult.error;
+
+          return {
+            meals: mealsResult.data || [],
+            foods: foodsResult.data || [],
+            shopping: shoppingResult.data || [],
+          };
+        };
+
+        let remoteData = await fetchRemoteData();
+
+        const migrationKey = "yamipick-cloud-migration-v1";
+        const migrationDone = Boolean(localStorage.getItem(migrationKey));
+
+        const readLocal = (key, fallback) => {
+          try {
+            const value = localStorage.getItem(key);
+            return value ? JSON.parse(value) : fallback;
+          } catch {
+            return fallback;
+          }
+        };
+
+        if (!migrationDone) {
+          const localSnapshot = {
+            meals: readLocal("yamipick-meals", {}),
+            foods: readLocal("yamipick-foods", []),
+            shopping: readLocal("yamipick-shopping", []),
+          };
+
+          const hasLocalData =
+            Object.keys(localSnapshot.meals || {}).length > 0 ||
+            (Array.isArray(localSnapshot.foods) &&
+              localSnapshot.foods.length > 0) ||
+            (Array.isArray(localSnapshot.shopping) &&
+              localSnapshot.shopping.length > 0);
+
+          const cloudIsEmpty =
+            remoteData.meals.length === 0 &&
+            remoteData.foods.length === 0 &&
+            remoteData.shopping.length === 0;
+
+          if (cloudIsEmpty) {
+            const mealRows = Object.entries(localSnapshot.meals || []).flatMap(
+              ([key, value]) => {
+                const match = key.match(/^(\d{4}-\d{2}-\d{2})-(lunch|dinner)$/);
+
+                if (!match || typeof value !== "string" || !value.trim()) {
+                  return [];
+                }
+
+                return [
+                  {
+                    household_id: householdId,
+                    meal_date: match[1],
+                    meal_type: match[2],
+                    food_name: value.trim(),
+                  },
+                ];
+              },
+            );
+
+            if (mealRows.length > 0) {
+              const { error } = await supabase
+                .from("meal_entries")
+                .upsert(mealRows, {
+                  onConflict: "household_id,meal_date,meal_type",
+                });
+
+              if (error) throw error;
+            }
+
+            const { data: existingFoods, error: existingFoodsError } =
+              await supabase
+                .from("foods")
+                .select("name")
+                .eq("household_id", householdId);
+
+            if (existingFoodsError) throw existingFoodsError;
+
+            const existingFoodNames = new Set(
+              (existingFoods || []).map((item) => item.name.toLowerCase()),
+            );
+
+            const uniqueLocalFoods = [
+              ...new Map(
+                (Array.isArray(localSnapshot.foods) ? localSnapshot.foods : [])
+                  .filter((name) => typeof name === "string" && name.trim())
+                  .map((name) => [name.trim().toLowerCase(), name.trim()]),
+              ).values(),
+            ];
+
+            const foodRows = uniqueLocalFoods
+              .filter((name) => !existingFoodNames.has(name.toLowerCase()))
+              .map((name) => ({
+                household_id: householdId,
+                name,
+              }));
+
+            if (foodRows.length > 0) {
+              const { error } = await supabase.from("foods").insert(foodRows);
+
+              if (error) throw error;
+            }
+
+            const { data: existingShopping, error: existingShoppingError } =
+              await supabase
+                .from("shopping_items")
+                .select("name, purchased")
+                .eq("household_id", householdId);
+
+            if (existingShoppingError) throw existingShoppingError;
+
+            const shoppingCounts = new Map();
+
+            (existingShopping || []).forEach((item) => {
+              const key = `${item.name.toLowerCase()}-${Boolean(item.purchased)}`;
+              shoppingCounts.set(key, (shoppingCounts.get(key) || 0) + 1);
+            });
+
+            const shoppingRows = [];
+
+            (Array.isArray(localSnapshot.shopping)
+              ? localSnapshot.shopping
+              : []
+            ).forEach((item) => {
+              if (!item || typeof item.name !== "string" || !item.name.trim()) {
+                return;
+              }
+
+              const name = item.name.trim();
+              const purchased = Boolean(item.purchased);
+              const key = `${name.toLowerCase()}-${purchased}`;
+              const count = shoppingCounts.get(key) || 0;
+
+              if (count > 0) {
+                shoppingCounts.set(key, count - 1);
+              } else {
+                shoppingRows.push({
+                  household_id: householdId,
+                  name,
+                  purchased,
+                });
+              }
+            });
+
+            if (shoppingRows.length > 0) {
+              const { error } = await supabase
+                .from("shopping_items")
+                .insert(shoppingRows);
+
+              if (error) throw error;
+            }
+
+            localStorage.setItem(migrationKey, "done");
+            remoteData = await fetchRemoteData();
+          } else {
+            if (hasLocalData) {
+              localStorage.setItem(
+                "yamipick-local-backup-before-cloud",
+                JSON.stringify(localSnapshot),
+              );
+
+              setDataMessage(
+                "اطلاعات آنلاین از قبل وجود داشت؛ نسخه قبلی اطلاعات این مرورگر جداگانه نگه‌داری شد.",
+              );
+            }
+
+            localStorage.setItem(migrationKey, "skipped-cloud-not-empty");
+          }
+        }
+
+        if (cancelled) return;
+
+        setMeals(
+          Object.fromEntries(
+            remoteData.meals.map((item) => [
+              `${item.meal_date}-${item.meal_type}`,
+              item.food_name,
+            ]),
+          ),
+        );
+
+        setFoods(remoteData.foods.map((item) => item.name));
+
+        setShoppingList(
+          remoteData.shopping.map((item) => ({
+            id: item.id,
+            name: item.name,
+            purchased: item.purchased,
+            price: 0,
+          })),
+        );
+      } catch (error) {
+        if (!cancelled) {
+          setDataMessage(error.message || "دریافت اطلاعات با مشکل مواجه شد.");
+        }
+      } finally {
+        if (!cancelled) {
+          setDataLoading(false);
+        }
+      }
+    };
+
+    loadHouseholdData();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [session?.user?.id, activeHousehold?.id]);
+  useEffect(() => {
+    if (!session?.user?.id || !activeHousehold?.id) return;
+
+    let cancelled = false;
+    const householdId = activeHousehold.id;
+
+    const refreshHouseholdData = async () => {
+      try {
+        const [mealsResult, foodsResult, shoppingResult] = await Promise.all([
+          supabase
+            .from("meal_entries")
+            .select("meal_date, meal_type, food_name")
+            .eq("household_id", householdId),
+
+          supabase
+            .from("foods")
+            .select("id, name")
+            .eq("household_id", householdId),
+
+          supabase
+            .from("shopping_items")
+            .select("id, name, purchased")
+            .eq("household_id", householdId),
+        ]);
+
+        if (mealsResult.error) throw mealsResult.error;
+        if (foodsResult.error) throw foodsResult.error;
+        if (shoppingResult.error) throw shoppingResult.error;
+
+        if (cancelled) return;
+
+        setMeals(
+          Object.fromEntries(
+            mealsResult.data.map((item) => [
+              `${item.meal_date}-${item.meal_type}`,
+              item.food_name,
+            ]),
+          ),
+        );
+
+        setFoods(foodsResult.data.map((item) => item.name));
+
+        setShoppingList(
+          shoppingResult.data.map((item) => ({
+            id: item.id,
+            name: item.name,
+            purchased: item.purchased,
+            price: 0,
+          })),
+        );
+      } catch (error) {
+        if (!cancelled) {
+          console.error("Realtime sync error:", error);
+        }
+      }
+    };
+
+    const channel = supabase
+      .channel(`household-${householdId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "meal_entries",
+          filter: `household_id=eq.${householdId}`,
+        },
+        refreshHouseholdData,
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "foods",
+          filter: `household_id=eq.${householdId}`,
+        },
+        refreshHouseholdData,
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "shopping_items",
+          filter: `household_id=eq.${householdId}`,
+        },
+        refreshHouseholdData,
+      )
+      .subscribe();
+
+    return () => {
+      cancelled = true;
+      supabase.removeChannel(channel);
+    };
+  }, [session?.user?.id, activeHousehold?.id]);
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, newSession) => {
+      setSession(newSession);
+      setAuthLoading(false);
+    });
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setAuthLoading(false);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
   useEffect(() => {
     localStorage.setItem("yamipick-meals", JSON.stringify(meals));
   }, [meals]);
@@ -111,45 +548,259 @@ function App() {
   useEffect(() => {
     localStorage.setItem("yamipick-shopping", JSON.stringify(shoppingList));
   }, [shoppingList]);
+  const handleAuthSubmit = async (e) => {
+    e.preventDefault();
+    setAuthMessage("");
 
-  const addFood = () => {
-    const name = newFood.trim();
+    const email = authEmail.trim();
 
-    if (!name) return;
-
-    if (foods.some((food) => food.toLowerCase() === name.toLowerCase())) {
-      alert("این غذا قبلاً در بانک غذا ثبت شده!");
+    if (!email || !authPassword) {
+      setAuthMessage("ایمیل و رمز عبور رو وارد کن.");
       return;
     }
 
-    setFoods((prev) => [...prev, name]);
+    if (authMode === "signup" && authPassword.length < 6) {
+      setAuthMessage("رمز عبور باید حداقل ۶ کاراکتر باشه.");
+      return;
+    }
+
+    setAuthBusy(true);
+
+    try {
+      if (authMode === "signup") {
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password: authPassword,
+          options: {
+            emailRedirectTo: `${window.location.origin}${import.meta.env.BASE_URL}`,
+          },
+        });
+
+        if (error) throw error;
+
+        if (data.session) {
+          setAuthMessage("ثبت‌نام موفق بود!");
+        } else {
+          setAuthMessage("حساب ساخته شد. برای فعال‌سازی، ایمیلت رو بررسی کن.");
+        }
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({
+          email,
+          password: authPassword,
+        });
+
+        if (error) throw error;
+      }
+    } catch (error) {
+      if (error.message.includes("Invalid login credentials")) {
+        setAuthMessage("ایمیل یا رمز عبور اشتباهه.");
+      } else {
+        setAuthMessage(error.message || "خطایی رخ داد.");
+      }
+    } finally {
+      setAuthBusy(false);
+    }
+  };
+
+  const handleSignOut = async () => {
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      setAuthMessage("خروج انجام نشد. دوباره تلاش کن.");
+    }
+  };
+  const createHousehold = async () => {
+    const name = householdName.trim();
+
+    if (!name) {
+      setHouseholdMessage("اسم فضا رو وارد کن.");
+      return;
+    }
+
+    setHouseholdBusy(true);
+    setHouseholdMessage("");
+
+    try {
+      const { data, error } = await supabase.rpc("create_household", {
+        _name: name,
+      });
+
+      if (error) throw error;
+
+      const created = Array.isArray(data) ? data[0] : data;
+
+      const newHousehold = {
+        id: created.household_id,
+        name,
+        invite_code: created.invite_code,
+        role: "owner",
+      };
+
+      setHouseholds((prev) => [
+        newHousehold,
+        ...prev.filter((item) => item.id !== newHousehold.id),
+      ]);
+
+      setActiveHousehold(newHousehold);
+      setHouseholdName("");
+      setHouseholdMessage("فضای جدید با موفقیت ساخته شد!");
+    } catch (error) {
+      setHouseholdMessage(error.message);
+    } finally {
+      setHouseholdBusy(false);
+    }
+  };
+
+  const joinHousehold = async () => {
+    if (!inviteCodeInput.trim()) {
+      setHouseholdMessage("کد دعوت رو وارد کن.");
+      return;
+    }
+
+    setHouseholdBusy(true);
+    setHouseholdMessage("");
+
+    try {
+      const { data, error } = await supabase.rpc("join_household", {
+        _invite_code: inviteCodeInput.trim(),
+      });
+
+      if (error) throw error;
+
+      const list = await loadHouseholds(session.user.id);
+
+      const joined = list.find((item) => item.id === data);
+
+      if (joined) {
+        setActiveHousehold(joined);
+      }
+
+      setInviteCodeInput("");
+      setHouseholdMessage("با موفقیت عضو فضای مشترک شدی!");
+    } catch (error) {
+      setHouseholdMessage(error.message);
+    } finally {
+      setHouseholdBusy(false);
+    }
+  };
+  const addFood = async () => {
+    const name = newFood.trim();
+
+    if (!name || !activeHousehold?.id) return;
+
+    if (foods.some((food) => food.toLowerCase() === name.toLowerCase())) {
+      alert("این غذا قبلاً توی بانک غذا ثبت شده!");
+      return;
+    }
+
+    setDataLoading(true);
+    setDataMessage("");
+
+    const { data, error } = await supabase
+      .from("foods")
+      .insert({
+        household_id: activeHousehold.id,
+        name,
+      })
+      .select("id, name")
+      .single();
+
+    setDataLoading(false);
+
+    if (error) {
+      setDataMessage("ثبت غذا انجام نشد: " + error.message);
+      return;
+    }
+
+    setFoods((prev) => [...prev, data.name]);
     setNewFood("");
   };
-  const addShoppingItem = () => {
+  const addShoppingItem = async () => {
     const name = newShoppingItem.trim();
 
-    if (!name) return;
+    if (!name || !activeHousehold?.id) return;
+
+    setDataLoading(true);
+    setDataMessage("");
+
+    const { data, error } = await supabase
+      .from("shopping_items")
+      .insert({
+        household_id: activeHousehold.id,
+        name,
+        purchased: false,
+      })
+      .select("id, name, purchased")
+      .single();
+
+    setDataLoading(false);
+
+    if (error) {
+      setDataMessage("ثبت کالا انجام نشد: " + error.message);
+      return;
+    }
 
     setShoppingList((prev) => [
       ...prev,
       {
-        id: Date.now(),
-        name,
-        purchased: false,
+        id: data.id,
+        name: data.name,
+        purchased: data.purchased,
         price: 0,
       },
     ]);
 
     setNewShoppingItem("");
   };
-  const togglePurchased = (id) => {
+  const togglePurchased = async (id) => {
+    if (!activeHousehold?.id) return;
+
+    const item = shoppingList.find((item) => item.id === id);
+    if (!item) return;
+
+    const newPurchased = !item.purchased;
+
+    setDataLoading(true);
+    setDataMessage("");
+
+    const { error } = await supabase
+      .from("shopping_items")
+      .update({ purchased: newPurchased })
+      .eq("id", id)
+      .eq("household_id", activeHousehold.id);
+
+    setDataLoading(false);
+
+    if (error) {
+      setDataMessage("تغییر وضعیت خرید انجام نشد: " + error.message);
+      return;
+    }
+
     setShoppingList((prev) =>
       prev.map((item) =>
-        item.id === id ? { ...item, purchased: !item.purchased } : item,
+        item.id === id ? { ...item, purchased: newPurchased } : item,
       ),
     );
   };
-  const deleteShoppingItem = (id) => {
+  const deleteShoppingItem = async (id) => {
+    if (!activeHousehold?.id) return;
+
+    setDataLoading(true);
+    setDataMessage("");
+
+    const { error } = await supabase
+      .from("shopping_items")
+      .delete()
+      .eq("id", id)
+      .eq("household_id", activeHousehold.id);
+
+    setDataLoading(false);
+
+    if (error) {
+      setDataMessage("حذف کالا انجام نشد: " + error.message);
+      return;
+    }
+
     setShoppingList((prev) => prev.filter((item) => item.id !== id));
   };
 
@@ -160,7 +811,25 @@ function App() {
     setModal("assign");
   };
 
-  const deleteFood = (food) => {
+  const deleteFood = async (food) => {
+    if (!activeHousehold?.id) return;
+
+    setDataLoading(true);
+    setDataMessage("");
+
+    const { error } = await supabase
+      .from("foods")
+      .delete()
+      .eq("household_id", activeHousehold.id)
+      .eq("name", food);
+
+    setDataLoading(false);
+
+    if (error) {
+      setDataMessage("حذف غذا انجام نشد: " + error.message);
+      return;
+    }
+
     setFoods((prev) => prev.filter((item) => item !== food));
   };
   const openModal = (type, dayIndex = selectedDay) => {
@@ -169,30 +838,80 @@ function App() {
     setModal(type);
   };
 
-  const saveMeal = () => {
+  const saveMeal = async () => {
+    if (!activeHousehold?.id) return;
+
+    let key;
+    let food;
+
     if (modal === "assign") {
       if (!selectedFood) return;
-      const key = `${days[modalDay].key}-${assignmentMeal}`;
-      setMeals((prev) => ({ ...prev, [key]: selectedFood }));
-      setModal(null);
-      setSelectedFood("");
+
+      key = `${days[modalDay].key}-${assignmentMeal}`;
+      food = selectedFood;
+    } else {
+      key = `${days[modalDay].key}-${modal}`;
+      food = foodName.trim();
+
+      if (!food) return;
+    }
+
+    const [mealDate, mealType] = [key.slice(0, 10), key.slice(11)];
+
+    setDataLoading(true);
+    setDataMessage("");
+
+    const { error } = await supabase.from("meal_entries").upsert(
+      {
+        household_id: activeHousehold.id,
+        meal_date: mealDate,
+        meal_type: mealType,
+        food_name: food,
+      },
+      {
+        onConflict: "household_id,meal_date,meal_type",
+      },
+    );
+
+    setDataLoading(false);
+
+    if (error) {
+      setDataMessage("ذخیره غذا انجام نشد: " + error.message);
       return;
     }
 
-    const key = `${days[modalDay].key}-${modal}`;
-    if (!foodName.trim()) return;
-
     setMeals((prev) => ({
       ...prev,
-      [key]: foodName.trim(),
+      [key]: food,
     }));
 
     setModal(null);
+    setSelectedFood("");
     setFoodName("");
   };
 
-  const deleteMeal = (type, dayIndex = selectedDay) => {
+  const deleteMeal = async (type, dayIndex = selectedDay) => {
+    if (!activeHousehold?.id) return;
+
     const key = `${days[dayIndex].key}-${type}`;
+    const mealDate = key.slice(0, 10);
+
+    setDataLoading(true);
+    setDataMessage("");
+
+    const { error } = await supabase
+      .from("meal_entries")
+      .delete()
+      .eq("household_id", activeHousehold.id)
+      .eq("meal_date", mealDate)
+      .eq("meal_type", type);
+
+    setDataLoading(false);
+
+    if (error) {
+      setDataMessage("حذف غذا انجام نشد: " + error.message);
+      return;
+    }
 
     setMeals((prev) => {
       const updated = { ...prev };
@@ -233,6 +952,306 @@ function App() {
       </div>
     );
   };
+  if (authLoading) {
+    return (
+      <div className="auth-screen" dir="rtl">
+        در حال بررسی حساب کاربری...
+      </div>
+    );
+  }
+
+  if (!session) {
+    return (
+      <div className="auth-screen" dir="rtl">
+        <form className="auth-card" onSubmit={handleAuthSubmit}>
+          <div className="auth-logo">🍽️</div>
+
+          <h1>YamiPick</h1>
+
+          <p>
+            {authMode === "login"
+              ? "خوش برگشتی! وارد حساب خودت شو."
+              : "به خانواده یامی‌پیک خوش اومدی!"}
+          </p>
+
+          <label>
+            ایمیل
+            <input
+              type="email"
+              value={authEmail}
+              onChange={(e) => setAuthEmail(e.target.value)}
+              placeholder="example@email.com"
+              required
+            />
+          </label>
+
+          <label>
+            رمز عبور
+            <input
+              type="password"
+              value={authPassword}
+              onChange={(e) => setAuthPassword(e.target.value)}
+              placeholder="حداقل ۶ کاراکتر"
+              required
+            />
+          </label>
+
+          {authMessage && <p className="auth-message">{authMessage}</p>}
+
+          <button className="auth-submit" type="submit" disabled={authBusy}>
+            {authBusy
+              ? "لطفاً صبر کن..."
+              : authMode === "login"
+                ? "ورود به حساب"
+                : "ساخت حساب"}
+          </button>
+
+          <button
+            className="auth-switch"
+            type="button"
+            onClick={() => {
+              setAuthMode(authMode === "login" ? "signup" : "login");
+              setAuthMessage("");
+            }}
+          >
+            {authMode === "login"
+              ? "حساب نداری؟ ثبت‌نام کن"
+              : "قبلاً ثبت‌نام کردی؟ وارد شو"}
+          </button>
+        </form>
+      </div>
+    );
+  }
+  if (householdLoading) {
+    return (
+      <div className="auth-screen" dir="rtl">
+        در حال بارگذاری اطلاعات...
+      </div>
+    );
+  }
+  if (showAccount) {
+    return (
+      <div className="app" dir="rtl">
+        <header className="topbar">
+          <div className="brand">
+            <span className="brand-icon">🍓</span>
+            <span>YamiPick</span>
+          </div>
+
+          <button
+            className="account-back"
+            onClick={() => setShowAccount(false)}
+          >
+            بازگشت
+          </button>
+        </header>
+
+        <main className="main-content account-page">
+          <section className="account-panel">
+            <h2>حساب کاربری من 👤</h2>
+            <p>{session.user.email}</p>
+
+            <div className="topbar-actions">
+              <button
+                className="profile"
+                onClick={() => setShowAccount(true)}
+                title="حساب کاربری"
+              >
+                👤
+              </button>
+
+              <button className="logout-button" onClick={handleSignOut}>
+                خروج
+              </button>
+            </div>
+          </section>
+
+          <section className="account-panel">
+            <h2>فضاهای من 🏡</h2>
+
+            {householdLoading ? (
+              <p>در حال بارگذاری فضاها...</p>
+            ) : households.length === 0 ? (
+              <p>هنوز عضو هیچ فضای مشترکی نیستی.</p>
+            ) : (
+              <div className="account-household-list">
+                {households.map((home) => (
+                  <div className="account-household" key={home.id}>
+                    <div>
+                      <strong>{home.name}</strong>
+                      <small>
+                        {home.role === "owner" ? "سازنده فضا" : "عضو فضا"}
+                      </small>
+                    </div>
+
+                    <button
+                      onClick={() => {
+                        setActiveHousehold(home);
+                        setShowAccount(false);
+                      }}
+                    >
+                      انتخاب فضا
+                    </button>
+
+                    {home.role === "owner" && (
+                      <div className="invite-code">
+                        <div className="invite-code-details">
+                          <span className="invite-code-label">
+                            کد دعوت فضای شما
+                          </span>
+
+                          <code className="invite-code-value" dir="ltr">
+                            {home.invite_code}
+                          </code>
+                        </div>
+
+                        <button
+                          className={`invite-copy-button ${
+                            copiedInviteCode === home.id ? "copied" : ""
+                          }`}
+                          onClick={async () => {
+                            try {
+                              await navigator.clipboard.writeText(
+                                home.invite_code,
+                              );
+                              setCopiedInviteCode(home.id);
+                            } catch {
+                              setHouseholdMessage(
+                                "کپی خودکار انجام نشد؛ کد رو دستی کپی کن.",
+                              );
+                            }
+                          }}
+                        >
+                          {copiedInviteCode === home.id ? "کپی شد ✓" : "کپی کد"}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+
+          <section className="account-panel">
+            <h2>＋ ساخت فضای جدید</h2>
+
+            <input
+              value={householdName}
+              onChange={(e) => setHouseholdName(e.target.value)}
+              placeholder="مثلاً خونه ما"
+            />
+
+            <button
+              className="account-action"
+              onClick={createHousehold}
+              disabled={householdBusy}
+            >
+              {householdBusy ? "در حال ساخت..." : "ساخت فضای جدید"}
+            </button>
+          </section>
+
+          <section className="account-panel">
+            <h2>عضویت در فضای موجود</h2>
+
+            <input
+              value={inviteCodeInput}
+              onChange={(e) => setInviteCodeInput(e.target.value)}
+              placeholder="کد دعوت رو وارد کن"
+              dir="ltr"
+            />
+
+            <button
+              className="account-action"
+              onClick={joinHousehold}
+              disabled={householdBusy}
+            >
+              {householdBusy ? "در حال انجام..." : "عضویت"}
+            </button>
+          </section>
+
+          {householdMessage && (
+            <p className="household-message">{householdMessage}</p>
+          )}
+        </main>
+      </div>
+    );
+  }
+  if (households.length === 0) {
+    return (
+      <div className="app" dir="rtl">
+        <header className="topbar">
+          <div className="brand">
+            <span className="brand-icon">🍓</span>
+            <span>YamiPick</span>
+          </div>
+
+          <div className="topbar-actions">
+            <button
+              className="profile"
+              onClick={() => setShowAccount(true)}
+              title="حساب کاربری"
+            >
+              👤
+            </button>
+
+            <button className="logout-button" onClick={handleSignOut}>
+              خروج
+            </button>
+          </div>
+        </header>
+
+        <main className="main-content onboarding-page">
+          <section className="onboarding-card">
+            <div className="welcome-emoji">🏡</div>
+
+            <h1>به یامی‌پیک خوش اومدی!</h1>
+
+            <p>برای شروع، فضای خودت رو بساز یا به یک فضای موجود ملحق شو.</p>
+
+            <div className="onboarding-section">
+              <h2>＋ ساخت فضای جدید</h2>
+
+              <input
+                value={householdName}
+                onChange={(e) => setHouseholdName(e.target.value)}
+                placeholder="برنامه غذایی من"
+              />
+
+              <button
+                className="account-action"
+                onClick={createHousehold}
+                disabled={householdBusy}
+              >
+                {householdBusy ? "در حال ساخت..." : "ساخت فضای جدید"}
+              </button>
+            </div>
+
+            <div className="onboarding-section">
+              <h2>عضویت در فضای موجود</h2>
+
+              <input
+                value={inviteCodeInput}
+                onChange={(e) => setInviteCodeInput(e.target.value)}
+                placeholder="کد دعوت رو وارد کن"
+              />
+
+              <button
+                className="account-action"
+                onClick={joinHousehold}
+                disabled={householdBusy}
+              >
+                {householdBusy ? "در حال انجام..." : "عضویت"}
+              </button>
+            </div>
+
+            {householdMessage && (
+              <p className="household-message">{householdMessage}</p>
+            )}
+          </section>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="app" dir="rtl">
@@ -241,7 +1260,13 @@ function App() {
           <span className="brand-icon">🍓</span>
           <span>YamiPick</span>
         </div>
-        <button className="profile">👩🏻</button>
+        <button
+          className="profile"
+          onClick={() => setShowAccount(true)}
+          title="حساب کاربری"
+        >
+          👤
+        </button>
       </header>
 
       <main className="main-content">

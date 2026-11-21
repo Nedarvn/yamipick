@@ -25,7 +25,7 @@ input {
   background: #fffaf6;
   color: #403633;
   font-family: "Vazirmatn", sans-serif;
-  padding-bottom: 100px;
+  padding-bottom: 180px;
 }
 
 .topbar {
@@ -1092,7 +1092,370 @@ input {
 
 @media (max-width: 600px) {
   .daily-meals {
-    padding: 15px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 12px;
+    gap: 10px;
     border-radius: 16px;
   }
+
+  .daily-meals > h3 {
+    grid-column: 1 / -1;
+    font-size: 16px;
+  }
+
+  .daily-meals .meal-card {
+    min-height: 135px;
+    padding: 12px 10px;
+    gap: 12px;
+  }
+
+  .meal-info {
+    gap: 7px;
+  }
+
+  .meal-icon {
+    font-size: 22px;
+  }
+
+  .meal-card h3 {
+    font-size: 13px;
+  }
+
+  .meal-card p {
+    font-size: 11px;
+  }
+
+  .meal-actions {
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+
+  .add-button,
+  .delete-button {
+    padding: 7px 9px;
+    font-size: 11px;
+  }
+}
+@media (max-width: 600px) {
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    height: 75px;
+  }
+}
+@media (max-width: 650px) {
+  .main-content {
+    margin-top: 12px;
+  }
+
+  .welcome {
+    padding: 16px 20px;
+  }
+
+  .week-section {
+    margin-top: 24px;
+  }
+
+  .daily-meals {
+    margin-top: 16px;
+    padding: 10px;
+  }
+
+  .daily-meals .meal-card {
+    min-height: 150px;
+    padding: 10px 8px;
+    gap: 8px;
+  }
+
+  .daily-meals .meal-card h3 {
+    font-size: 12px;
+  }
+
+  .daily-meals .meal-card p {
+    font-size: 10px;
+  }
+}
+.auth-screen {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: #fffaf6;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 35px 25px;
+  background: white;
+  border: 1px solid #f1eae5;
+  border-radius: 24px;
+  text-align: center;
+  box-shadow: 0 8px 30px #40363310;
+}
+
+.auth-logo {
+  font-size: 45px;
+}
+
+.auth-card h1 {
+  color: #e87983;
+  margin: 10px 0;
+}
+
+.auth-card > p {
+  color: #998b84;
+  font-size: 13px;
+  margin-bottom: 25px;
+}
+
+.auth-card label {
+  display: block;
+  text-align: right;
+  font-size: 13px;
+  margin-top: 15px;
+  color: #594b48;
+}
+
+.auth-card input {
+  display: block;
+  width: 100%;
+  margin-top: 7px;
+  padding: 13px;
+  border: 1px solid #eaded8;
+  border-radius: 12px;
+  outline: none;
+  text-align: left;
+  direction: ltr;
+}
+
+.auth-submit {
+  width: 100%;
+  margin-top: 22px;
+  padding: 13px;
+  border: 0;
+  border-radius: 12px;
+  background: #e87983;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.auth-submit:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.auth-switch {
+  margin-top: 18px;
+  border: 0;
+  background: transparent;
+  color: #d56f78;
+  cursor: pointer;
+}
+
+.auth-message {
+  color: #a65c50;
+  font-size: 12px;
+  margin-top: 15px;
+  direction: rtl;
+}
+
+.logout-button {
+  border: 0;
+  border-radius: 10px;
+  padding: 9px 14px;
+  background: #fff0e9;
+  color: #d56f78;
+  cursor: pointer;
+}
+.account-page {
+  max-width: 650px;
+}
+
+.account-panel {
+  background: white;
+  border: 1px solid #f1eae5;
+  border-radius: 18px;
+  padding: 22px;
+  margin-bottom: 18px;
+}
+
+.account-panel h2 {
+  font-size: 17px;
+  margin: 0 0 15px;
+}
+
+.account-panel p {
+  color: #998b84;
+  font-size: 13px;
+}
+
+.account-panel input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #eaded8;
+  border-radius: 11px;
+  margin: 8px 0;
+  outline: none;
+}
+
+.account-action,
+.account-household button,
+.invite-code button {
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  background: #e87983;
+  color: white;
+  cursor: pointer;
+}
+
+.account-action {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.account-action:disabled {
+  opacity: 0.6;
+}
+
+.account-household-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.account-household {
+  padding: 14px;
+  border: 1px solid #f1eae5;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.account-household > div:first-child {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.account-household small {
+  color: #998b84;
+}
+
+.invite-code {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #f1eae5;
+}
+
+.invite-code-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+}
+
+.invite-code-label {
+  color: #998b84;
+  font-size: 12px;
+}
+
+.invite-code-value {
+  display: block;
+  padding: 10px 13px;
+  background: #fff5ef;
+  border-radius: 9px;
+  color: #594b48;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  user-select: all;
+  direction: ltr;
+}
+
+.account-back {
+  border: 0;
+  background: #fff0e9;
+  color: #d56f78;
+  padding: 9px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.household-message {
+  text-align: center;
+  color: #71865d;
+  font-size: 13px;
+}
+
+.logout-button {
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  background: #fff0e9;
+  color: #d56f78;
+  cursor: pointer;
+}
+.onboarding-page {
+  max-width: 550px;
+  margin: 45px auto;
+}
+
+.onboarding-card {
+  background: white;
+  border: 1px solid #f1eae5;
+  border-radius: 24px;
+  padding: 28px;
+  text-align: center;
+  box-shadow: 0 8px 30px #40363310;
+}
+
+.onboarding-card h1 {
+  color: #e87983;
+  font-size: 23px;
+}
+
+.onboarding-card > p {
+  color: #998b84;
+  font-size: 13px;
+  line-height: 2;
+}
+
+.onboarding-section {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid #f1eae5;
+  text-align: right;
+}
+
+.onboarding-section h2 {
+  font-size: 16px;
+}
+
+.onboarding-section input {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #eaded8;
+  border-radius: 12px;
+  margin: 8px 0;
+  outline: none;
+}
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.invite-copy-button {
+  transition: background 0.2s ease;
+}
+
+.invite-copy-button.copied {
+  background: #58a87a;
 }
