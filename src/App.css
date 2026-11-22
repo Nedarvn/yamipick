@@ -1462,3 +1462,29 @@ input {
 .invite-copy-button.copied {
   background: #58a87a;
 }
+.food-suggestions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+  max-height: 180px;
+  overflow-y: auto;
+  text-align: right;
+}
+
+.food-suggestions button {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #f1e3d8;
+  border-radius: 10px;
+  background: #fffaf5;
+  color: #594b48;
+  text-align: right;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.food-suggestions button:hover {
+  background: #fff0e2;
+  border-color: #ed812f;
+}

@@ -83,6 +83,9 @@ function App() {
   const [newFood, setNewFood] = useState("");
   const [modal, setModal] = useState(null);
   const [foodName, setFoodName] = useState("");
+  const suggestions = foods.filter((food) =>
+    food.toLowerCase().includes(foodName.trim().toLowerCase()),
+  );
   const [selectedFood, setSelectedFood] = useState("");
   const [assignmentMeal, setAssignmentMeal] = useState("lunch");
   const [session, setSession] = useState(null);
@@ -1282,7 +1285,7 @@ function App() {
         <section className="week-section">
           <div className="section-heading">
             <div>
-              <h2>برنامه غذایی من</h2>
+              <h2>{activeHousehold?.name || "برنامه غذایی من"}</h2>
               <p>{weekTitle}</p>
             </div>
 
@@ -1373,6 +1376,19 @@ function App() {
                 onChange={(e) => setNewFood(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && addFood()}
               />
+              {foodName.trim() && suggestions.length > 0 && (
+                <div className="food-suggestions">
+                  {suggestions.map((food, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      onClick={() => setFoodName(food)}
+                    >
+                      {food}
+                    </button>
+                  ))}
+                </div>
+              )}
               <button onClick={addFood}>＋ ثبت غذا</button>
             </div>
 
@@ -1571,6 +1587,19 @@ function App() {
                   onKeyDown={(e) => e.key === "Enter" && saveMeal()}
                   autoFocus
                 />
+                {foodName.trim() && suggestions.length > 0 && (
+                  <div className="food-suggestions">
+                    {suggestions.map((food, index) => (
+                      <button
+                        key={index}
+                        type="button"
+                        onClick={() => setFoodName(food)}
+                      >
+                        {food}
+                      </button>
+                    ))}
+                  </div>
+                )}
                 <button className="save-food" onClick={saveMeal}>
                   ذخیره غذا
                 </button>
