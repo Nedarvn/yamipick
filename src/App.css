@@ -1194,13 +1194,16 @@ input {
   text-align: center;
   box-shadow: 0 8px 30px #40363310;
 }
+.auth-card input:focus {
+  border-color: #ed812f;
+}
 
 .auth-logo {
   font-size: 45px;
 }
 
 .auth-card h1 {
-  color: #e87983;
+  color: #ed812f;
   margin: 10px 0;
 }
 
@@ -1236,7 +1239,7 @@ input {
   padding: 13px;
   border: 0;
   border-radius: 12px;
-  background: #e87983;
+  background: #ed812f;
   color: white;
   font-weight: 700;
   cursor: pointer;
@@ -1251,7 +1254,7 @@ input {
   margin-top: 18px;
   border: 0;
   background: transparent;
-  color: #d56f78;
+  color: #d96c24;
   cursor: pointer;
 }
 

@@ -966,12 +966,12 @@ function App() {
         <form className="auth-card" onSubmit={handleAuthSubmit}>
           <div className="auth-logo">🍽️</div>
 
-          <h1>YamiPick</h1>
+          <h1>یامی‌پیک</h1>
 
           <p>
             {authMode === "login"
-              ? "خوش برگشتی! وارد حساب خودت شو."
-              : "به خانواده یامی‌پیک خوش اومدی!"}
+              ? "به یامی‌پیک خوش اومدی! وارد حساب خودت شو."
+              : "اولین قدم برای برنامه‌ریزی خوشمزه‌تر!"}
           </p>
 
           <label>
