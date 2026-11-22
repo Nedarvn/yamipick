@@ -42,15 +42,15 @@ input {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  width: 100%;
-  padding: 20px;
+  gap: 8px;
+  font-size: 23px;
+  font-weight: 800;
+  color: #ed812f;
+  direction: rtl;
 }
 
-.brand-logo {
-  width: 160px;
-  height: 75px;
-  object-fit: contain;
-  display: block;
+.brand-icon {
+  font-size: 22px;
 }
 .profile {
   border: 0;
@@ -150,7 +150,12 @@ input {
   cursor: pointer;
 }
 
-.day span {
+.day-name {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.day-date {
   font-size: 11px;
 }
 
@@ -869,20 +874,27 @@ input {
   gap: 5px;
   min-width: 0;
 }
-
 .weekly-meal-button {
   display: flex;
   align-items: center;
-  gap: 7px;
-  width: 100%;
-  min-width: 0;
-  padding: 8px 10px;
+  justify-self: end;
+  gap: 9px;
+  width: fit-content;
+  min-width: 170px;
+  max-width: 100%;
+  padding: 11px 13px;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   font-family: inherit;
-  font-size: 12px;
+  font-size: 15px;
+  font-weight: 600;
   text-align: right;
   cursor: pointer;
+}
+
+.weekly-meal-button span:first-child {
+  font-size: 19px;
+  flex-shrink: 0;
 }
 
 .weekly-meal-button span:last-child {
@@ -914,7 +926,9 @@ input {
   }
 
   .weekly-meal-button {
-    font-size: 11px;
+    font-size: 14px;
+    min-width: 145px;
+    padding: 10px;
   }
 }
 
@@ -1488,4 +1502,52 @@ input {
 .food-suggestions button:hover {
   background: #fff0e2;
   border-color: #ed812f;
+}
+.welcome-pizza {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 250px;
+  height: 250px;
+  flex-shrink: 0;
+}
+
+.welcome-pizza img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.brand-sun {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+.profile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+.profile {
+  width: 52px;
+  height: 52px;
+  padding: 3px;
+  background: #8b4a24;
+  border: 2px solid #f2a04a;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 0;
+  display: block;
 }

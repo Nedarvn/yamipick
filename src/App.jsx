@@ -1037,10 +1037,11 @@ function App() {
       <div className="app" dir="rtl">
         <header className="topbar">
           <div className="brand">
+            <span>یامی‌پیک</span>
             <img
-              src={`${import.meta.env.BASE_URL}yamipick-logo.png`}
-              alt="یامی‌پیک"
-              className="brand-logo"
+              className="brand-sun"
+              src={`${import.meta.env.BASE_URL}yamipick-sun.png`}
+              alt=""
             />
           </div>
 
@@ -1054,7 +1055,7 @@ function App() {
 
         <main className="main-content account-page">
           <section className="account-panel">
-            <h2>حساب کاربری من 👤</h2>
+            <h2>حساب کاربری من </h2>
             <p>{session.user.email}</p>
 
             <div className="topbar-actions">
@@ -1063,7 +1064,10 @@ function App() {
                 onClick={() => setShowAccount(true)}
                 title="حساب کاربری"
               >
-                👤
+                <img
+                  src={`${import.meta.env.BASE_URL}yamipick-chef.png`}
+                  alt="آواتار کاربر"
+                />
               </button>
 
               <button className="logout-button" onClick={handleSignOut}>
@@ -1187,10 +1191,11 @@ function App() {
       <div className="app" dir="rtl">
         <header className="topbar">
           <div className="brand">
+            <span>یامی‌پیک</span>
             <img
-              src={`${import.meta.env.BASE_URL}yamipick-logo.png`}
-              alt="یامی‌پیک"
-              className="brand-logo"
+              className="brand-sun"
+              src={`${import.meta.env.BASE_URL}yamipick-sun.png`}
+              alt=""
             />
           </div>
 
@@ -1200,7 +1205,10 @@ function App() {
               onClick={() => setShowAccount(true)}
               title="حساب کاربری"
             >
-              👤
+              <img
+                src={`${import.meta.env.BASE_URL}yamipick-chef.png`}
+                alt="آواتار کاربر"
+              />
             </button>
 
             <button className="logout-button" onClick={handleSignOut}>
@@ -1266,10 +1274,11 @@ function App() {
     <div className="app" dir="rtl">
       <header className="topbar">
         <div className="brand">
+          <span>یامی‌پیک</span>
           <img
-            src={`${import.meta.env.BASE_URL}yamipick-logo.png`}
-            alt="یامی‌پیک"
-            className="brand-logo"
+            className="brand-sun"
+            src={`${import.meta.env.BASE_URL}yamipick-sun.png`}
+            alt=""
           />
         </div>
         <button
@@ -1277,7 +1286,10 @@ function App() {
           onClick={() => setShowAccount(true)}
           title="حساب کاربری"
         >
-          👤
+          <img
+            src={`${import.meta.env.BASE_URL}yamipick-chef.png`}
+            alt="آواتار کاربر"
+          />
         </button>
       </header>
 
@@ -1288,7 +1300,12 @@ function App() {
             <h1>امروز چی بخوریم؟ 😋</h1>
             <p className="subtitle">برای خوشمزه‌تر شدن روزت برنامه بچین.</p>
           </div>
-          <div className="welcome-emoji">🥑</div>
+          <div className="welcome-pizza">
+            <img
+              src={`${import.meta.env.BASE_URL}yamipick-pizza.png`}
+              alt="یامی‌پیک"
+            />
+          </div>
         </section>
 
         <section className="week-section">
