@@ -44,7 +44,7 @@ input {
   gap: 10px;
   font-size: 23px;
   font-weight: 800;
-  color: #e66b78;
+  color: #ed812f;
   direction: ltr;
 }
 
@@ -54,7 +54,7 @@ input {
 
 .profile {
   border: 0;
-  background: #fff0e9;
+  background: #fff0e2;
   border-radius: 50%;
   width: 43px;
   height: 43px;
@@ -159,10 +159,10 @@ input {
 }
 
 .day.active {
-  background: #e87983;
+  background: #ed812f;
   color: white;
-  border-color: #e87983;
-  box-shadow: 0 5px 14px #e8798340;
+  border-color: #ed812f;
+  box-shadow: 0 5px 14px #ed812f40;
 }
 
 .meals {
@@ -228,7 +228,7 @@ input {
   border-radius: 10px;
   padding: 9px 14px;
   background: #fff;
-  color: #d56f78;
+  color: #d96c24;
   font-weight: 600;
   cursor: pointer;
 }
@@ -293,7 +293,7 @@ input {
 }
 
 .nav-item.selected {
-  color: #e87983;
+  color: #ed812f;
   font-weight: 700;
 }
 
@@ -353,12 +353,12 @@ input {
   border: 1px solid #eaded8;
   border-radius: 12px;
   outline: none;
-  font-size: 14px;
+  font-size: 16px;
   text-align: right;
 }
 
 .food-modal input:focus {
-  border-color: #e87983;
+  border-color: #ed812f;
 }
 
 .save-food {
@@ -366,7 +366,7 @@ input {
   padding: 13px;
   border: 0;
   border-radius: 12px;
-  background: #e87983;
+  background: #ed812f;
   color: white;
   font-weight: 700;
   cursor: pointer;
@@ -448,8 +448,8 @@ input {
 }
 
 .food-count {
-  background: #fff0e9;
-  color: #d56f78;
+  background: #fff0e2;
+  color: #d96c24;
   padding: 7px 12px;
   border-radius: 20px;
   font-size: 12px;
@@ -470,14 +470,14 @@ input {
 }
 
 .food-input-row input:focus {
-  border-color: #e87983;
+  border-color: #ed812f;
 }
 
 .food-input-row button {
   border: 0;
   border-radius: 12px;
   padding: 10px 16px;
-  background: #e87983;
+  background: #ed812f;
   color: white;
   cursor: pointer;
 }
@@ -534,7 +534,7 @@ input {
 }
 
 .food-item-actions .remove-food {
-  color: #d56f78;
+  color: #d96c24;
 }
 
 @media (max-width: 650px) {
@@ -584,8 +584,8 @@ input {
 }
 
 .food-count {
-  background: #fff0e9;
-  color: #d56f78;
+  background: #fff0e2;
+  color: #d96c24;
   padding: 7px 12px;
   border-radius: 20px;
   font-size: 12px;
@@ -609,7 +609,7 @@ input {
   border: 0;
   border-radius: 12px;
   padding: 10px 16px;
-  background: #e87983;
+  background: #ed812f;
   color: white;
   cursor: pointer;
 }
@@ -666,7 +666,7 @@ input {
 }
 
 .food-item-actions .remove-food {
-  color: #d56f78;
+  color: #d96c24;
 }
 
 @media (max-width: 650px) {
@@ -716,8 +716,8 @@ input {
 }
 
 .shopping-count {
-  background: #fff0e9;
-  color: #d56f78;
+  background: #fff0e2;
+  color: #d96c24;
   padding: 7px 12px;
   border-radius: 20px;
   font-size: 12px;
@@ -742,7 +742,7 @@ input {
   border: 0;
   border-radius: 12px;
   padding: 10px 16px;
-  background: #e87983;
+  background: #ed812f;
   color: white;
   cursor: pointer;
   font-family: inherit;
@@ -784,7 +784,7 @@ input {
 }
 
 .shopping-item-name input {
-  accent-color: #e87983;
+  accent-color: #ed812f;
   width: 17px;
   height: 17px;
 }
@@ -859,7 +859,7 @@ input {
 }
 
 .weekly-day-heading span {
-  color: #d56f78;
+  color: #d96c24;
   font-size: 11px;
 }
 
@@ -935,13 +935,13 @@ input {
 
 .food-search:focus,
 .assignment-select:focus {
-  border-color: #e87983;
+  border-color: #ed812f;
 }
 
 .food-item-actions .assign-food-button {
   padding: 9px 14px;
-  background: #fff0e9;
-  color: #d56f78;
+  background: #fff0e2;
+  color: #d96c24;
   font-family: inherit;
   font-size: 12px;
   font-weight: 600;
@@ -972,7 +972,7 @@ input {
   padding: 10px;
   border-radius: 10px;
   background: #fffaf6;
-  color: #d56f78 !important;
+  color: #d96c24 !important;
   font-weight: 700;
 }
 
@@ -1005,9 +1005,9 @@ input {
 }
 
 .week-navigation button:hover {
-  background: #e87983;
+  background: #ed812f;
   color: white;
-  border-color: #e87983;
+  border-color: #ed812f;
 }
 
 /* چیدمان ناهار و شام روز انتخاب‌شده */
@@ -1270,8 +1270,8 @@ input {
   border: 0;
   border-radius: 10px;
   padding: 9px 14px;
-  background: #fff0e9;
-  color: #d56f78;
+  background: #fff0e2;
+  color: #d96c24;
   cursor: pointer;
 }
 .account-page {
@@ -1311,7 +1311,7 @@ input {
   border: 0;
   border-radius: 10px;
   padding: 10px 14px;
-  background: #e87983;
+  background: #ed812f;
   color: white;
   cursor: pointer;
 }
@@ -1386,8 +1386,8 @@ input {
 
 .account-back {
   border: 0;
-  background: #fff0e9;
-  color: #d56f78;
+  background: #fff0e2;
+  color: #d96c24;
   padding: 9px 14px;
   border-radius: 10px;
   cursor: pointer;
@@ -1403,8 +1403,8 @@ input {
   border: 0;
   border-radius: 10px;
   padding: 10px 14px;
-  background: #fff0e9;
-  color: #d56f78;
+  background: #fff0e2;
+  color: #d96c24;
   cursor: pointer;
 }
 .onboarding-page {
@@ -1422,7 +1422,7 @@ input {
 }
 
 .onboarding-card h1 {
-  color: #e87983;
+  color: #ed812f;
   font-size: 23px;
 }
 
