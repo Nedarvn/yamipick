@@ -41,17 +41,17 @@ input {
 .brand {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 23px;
-  font-weight: 800;
-  color: #ed812f;
-  direction: ltr;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 20px;
 }
 
-.brand-icon {
-  font-size: 27px;
+.brand-logo {
+  width: 160px;
+  height: 75px;
+  object-fit: contain;
+  display: block;
 }
-
 .profile {
   border: 0;
   background: #fff0e2;
