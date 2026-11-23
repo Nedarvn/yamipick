@@ -931,12 +931,13 @@ input {
     padding: 10px;
   }
   .day .day-name {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 700;
   }
 
   .day .day-date {
-    font-size: 12px;
+    font-size: 13px;
+    font-weight: 600;
   }
 }
 
