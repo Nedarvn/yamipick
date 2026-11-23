@@ -177,16 +177,6 @@ input {
   margin-top: 28px;
 }
 
-.meal-card {
-  padding: 22px;
-  border-radius: 20px;
-  min-height: 190px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 20px;
-}
-
 .lunch {
   background: #fff1dc;
 }
@@ -195,23 +185,20 @@ input {
   background: #eeeaff;
 }
 
-.meal-info {
+/* Meal Cards */
+.meal-card {
+  padding: 18px;
+  border-radius: 20px;
+  min-height: 170px;
   display: flex;
-  align-items: flex-start;
+  flex-direction: column;
+  justify-content: space-between;
   gap: 14px;
-}
-
-.meal-icon {
-  font-size: 28px;
-}
-
-.meal-label {
-  color: #9c8177;
-  font-size: 12px;
+  min-width: 0;
 }
 
 .meal-card h3 {
-  font-size: 17px;
+  font-size: 19px;
   margin: 5px 0;
 }
 
@@ -221,32 +208,106 @@ input {
   margin: 0;
 }
 
-.meal-actions {
+.meal-info {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 10px;
 }
 
-.add-button {
-  align-self: flex-start;
+.meal-heading {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.meal-info h3 {
+  text-align: center;
+  width: 100%;
+}
+
+.meal-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.meal-label {
+  color: #9c8177;
+  font-size: 14px;
+}
+
+.meal-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.add-button,
+.delete-button {
+  flex: 1;
+  min-width: 0;
   border: 0;
   border-radius: 10px;
-  padding: 9px 14px;
-  background: #fff;
-  color: #d96c24;
+  padding: 9px 5px;
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
+  text-align: center;
+}
+
+.add-button {
+  background: #fff;
+  color: #d96c24;
 }
 
 .delete-button {
-  border: 0;
   background: #ffffffa8;
   color: #c65c64;
-  border-radius: 10px;
-  padding: 9px 13px;
-  cursor: pointer;
 }
 
+/* Daily Meals */
+.daily-meals .meal-card {
+  min-width: 0;
+}
+
+/* Mobile */
+@media (max-width: 650px) {
+  .daily-meals .meal-card {
+    min-height: 145px;
+    padding: 12px 10px;
+    gap: 10px;
+  }
+
+  .daily-meals .meal-info {
+    gap: 7px;
+  }
+
+  .daily-meals .meal-icon {
+    font-size: 21px;
+  }
+
+  .daily-meals .meal-card h3 {
+    font-size: 15px;
+  }
+
+  .daily-meals .meal-card p {
+    font-size: 11px;
+  }
+
+  .daily-meals .meal-label {
+    font-size: 13px;
+  }
+
+  .daily-meals .meal-actions {
+    gap: 5px;
+  }
+
+  .daily-meals .add-button,
+  .daily-meals .delete-button {
+    padding: 8px 3px;
+    font-size: 11px;
+  }
+}
 .tip {
   margin-top: 22px;
   padding: 15px 20px;
@@ -408,10 +469,6 @@ input {
     border-radius: 11px;
   }
 
-  .day span {
-    font-size: 9px;
-  }
-
   .day strong {
     font-size: 14px;
   }
@@ -548,12 +605,22 @@ input {
   }
 
   .food-item {
-    align-items: flex-start;
-    flex-direction: column;
+    align-items: center;
+    flex-direction: row;
+  }
+
+  .food-name {
+    flex: 1;
+    min-width: 0;
   }
 
   .food-item-actions {
-    width: 100%;
+    width: auto;
+    flex-shrink: 0;
+  }
+
+  .food-item-actions button {
+    white-space: nowrap;
   }
 
   .food-input-row button {
@@ -674,20 +741,6 @@ input {
   color: #d96c24;
 }
 
-@media (max-width: 650px) {
-  .food-bank {
-    padding: 17px;
-  }
-
-  .food-item {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .food-item-actions {
-    width: 100%;
-  }
-}
 .no-food-result {
   text-align: center;
   color: #a4958e;
@@ -916,6 +969,17 @@ input {
 }
 
 @media (max-width: 420px) {
+  .week-days {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 4px;
+  }
+  .day {
+    min-width: 0;
+    padding: 10px 1px;
+    gap: 7px;
+    border-radius: 11px;
+  }
   .weekly-overview {
     padding: 14px;
   }
@@ -931,13 +995,14 @@ input {
     padding: 10px;
   }
   .day .day-name {
-    font-size: 16px;
+    font-size: 10px;
     font-weight: 700;
+    white-space: nowrap;
   }
 
   .day .day-date {
-    font-size: 13px;
-    font-weight: 600;
+    font-size: 10px;
+    white-space: nowrap;
   }
 }
 
@@ -1006,7 +1071,7 @@ input {
 
 @media (max-width: 650px) {
   .food-item-actions .assign-food-button {
-    width: 100%;
+    width: auto;
   }
 }
 
@@ -1045,11 +1110,6 @@ input {
   grid-column: 1 / -1;
   margin: 0 0 4px;
   font-size: 18px;
-}
-
-.daily-meals .meal-card {
-  min-width: 0;
-  min-height: 170px;
 }
 
 .daily-meals .lunch-card {
@@ -1125,39 +1185,6 @@ input {
     grid-column: 1 / -1;
     font-size: 16px;
   }
-
-  .daily-meals .meal-card {
-    min-height: 135px;
-    padding: 12px 10px;
-    gap: 12px;
-  }
-
-  .meal-info {
-    gap: 7px;
-  }
-
-  .meal-icon {
-    font-size: 22px;
-  }
-
-  .meal-card h3 {
-    font-size: 13px;
-  }
-
-  .meal-card p {
-    font-size: 11px;
-  }
-
-  .meal-actions {
-    gap: 5px;
-    flex-wrap: wrap;
-  }
-
-  .add-button,
-  .delete-button {
-    padding: 7px 9px;
-    font-size: 11px;
-  }
 }
 @media (max-width: 600px) {
   .bottom-nav {
@@ -1184,18 +1211,29 @@ input {
     padding: 10px;
   }
 
-  .daily-meals .meal-card {
-    min-height: 150px;
-    padding: 10px 8px;
-    gap: 8px;
+  .welcome-pizza {
+    width: 110px;
+    height: 110px;
+    flex-shrink: 0;
+    transform: translateX(10px);
   }
 
-  .daily-meals .meal-card h3 {
+  .welcome {
+    gap: 8px;
+    padding: 16px;
+  }
+
+  .welcome h1 {
+    font-size: 18px;
+    white-space: nowrap;
+  }
+
+  .subtitle {
     font-size: 12px;
   }
-
-  .daily-meals .meal-card p {
-    font-size: 10px;
+  .welcome .subtitle {
+    white-space: nowrap;
+    font-size: 11px;
   }
 }
 .auth-screen {
@@ -1516,8 +1554,8 @@ input {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 180px;
-  height: 180px;
+  width: 200px;
+  height: 200px;
   flex-shrink: 0;
 }
 
@@ -1559,4 +1597,87 @@ input {
   object-fit: contain;
   border-radius: 0;
   display: block;
+}
+.brand-heart {
+  font-size: 20px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.add-to-food-bank {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 12px;
+  color: #76584b;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.add-to-food-bank input {
+  accent-color: #ed812f;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+@media (max-width: 650px) {
+  .daily-meals .meal-actions {
+    gap: 4px;
+  }
+
+  .daily-meals .add-button,
+  .daily-meals .delete-button {
+    flex: 1 1 0;
+    white-space: nowrap;
+    padding: 8px 2px;
+    font-size: 10px;
+  }
+
+  .daily-meals .meal-card h3 {
+    font-size: 16px;
+  }
+
+  .daily-meals .meal-label {
+    font-size: 14px;
+  }
+}
+/* ===== WEEKLY OVERVIEW MOBILE ===== */
+
+@media (max-width: 650px) {
+  .weekly-grid {
+    width: 100%;
+  }
+
+  .weekly-day-card {
+    width: 100%;
+    box-sizing: border-box;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 7fr);
+    gap: 8px;
+  }
+
+  .weekly-day-heading {
+    min-width: 0;
+    align-items: center;
+    text-align: center;
+  }
+
+  .weekly-meals {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .weekly-meal-button {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+}
+@media (max-width: 650px) {
+  .weekly-day-heading strong {
+    font-size: 14px;
+  }
+
+  .weekly-day-heading span {
+    font-size: 12px;
+  }
 }

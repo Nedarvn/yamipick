@@ -83,6 +83,7 @@ function App() {
   const [newFood, setNewFood] = useState("");
   const [modal, setModal] = useState(null);
   const [foodName, setFoodName] = useState("");
+  const [addToFoodBank, setAddToFoodBank] = useState(true);
   const suggestions = foods.filter((food) =>
     food.toLowerCase().includes(foodName.trim().toLowerCase()),
   );
@@ -876,12 +877,38 @@ function App() {
       },
     );
 
-    setDataLoading(false);
-
     if (error) {
+      setDataLoading(false);
       setDataMessage("ذخیره غذا انجام نشد: " + error.message);
       return;
     }
+
+    // افزودن غذا به بانک، در صورت فعال بودن چک‌باکس
+    const foodAlreadyExists = foods.some(
+      (item) => item.toLowerCase() === food.toLowerCase(),
+    );
+
+    if (modal !== "assign" && addToFoodBank && !foodAlreadyExists) {
+      const { data, error: foodError } = await supabase
+        .from("foods")
+        .insert({
+          household_id: activeHousehold.id,
+          name: food,
+        })
+        .select("id, name")
+        .single();
+
+      if (foodError) {
+        setDataMessage(
+          "وعده ذخیره شد، اما افزودن غذا به بانک انجام نشد: " +
+            foodError.message,
+        );
+      } else {
+        setFoods((prev) => [...prev, data.name]);
+      }
+    }
+
+    setDataLoading(false);
 
     setMeals((prev) => ({
       ...prev,
@@ -891,6 +918,7 @@ function App() {
     setModal(null);
     setSelectedFood("");
     setFoodName("");
+    setAddToFoodBank(true);
   };
 
   const deleteMeal = async (type, dayIndex = selectedDay) => {
@@ -927,23 +955,25 @@ function App() {
   const filteredFoods = foods.filter((food) =>
     food.toLowerCase().includes(searchFood.toLowerCase()),
   );
-
+  {
+    /* ===== MEAL CARD COMPONENT ===== */
+  }
   const renderMeal = (type, title, icon, className) => {
     const food = meals[`${days[selectedDay].key}-${type}`];
     return (
       <div className={`meal-card ${className}`}>
         <div className="meal-info">
-          <span className="meal-icon">{icon}</span>
-          <div>
+          <div className="meal-heading">
+            <span className="meal-icon">{icon}</span>
             <span className="meal-label">{title}</span>
-            <h3>{food || "هنوز غذایی انتخاب نکردی"}</h3>
-            {!food && <p>برای این وعده غذا انتخاب کن.</p>}
           </div>
+
+          <h3>{food || "هنوز غذایی انتخاب نکردی"}</h3>
         </div>
 
         <div className="meal-actions">
           <button className="add-button" onClick={() => openModal(type)}>
-            {food ? "✏️ ویرایش غذا" : "＋ افزودن غذا"}
+            {food ? " ویرایش غذا" : "＋ افزودن غذا"}
           </button>
 
           {food && (
@@ -1038,11 +1068,7 @@ function App() {
         <header className="topbar">
           <div className="brand">
             <span>یامی‌پیک</span>
-            <img
-              className="brand-sun"
-              src={`${import.meta.env.BASE_URL}yamipick-sun.png`}
-              alt=""
-            />
+            <span className="brand-heart">🧡</span>
           </div>
 
           <button
@@ -1192,11 +1218,7 @@ function App() {
         <header className="topbar">
           <div className="brand">
             <span>یامی‌پیک</span>
-            <img
-              className="brand-sun"
-              src={`${import.meta.env.BASE_URL}yamipick-sun.png`}
-              alt=""
-            />
+            <span className="brand-heart">🧡</span>
           </div>
 
           <div className="topbar-actions">
@@ -1275,11 +1297,7 @@ function App() {
       <header className="topbar">
         <div className="brand">
           <span>یامی‌پیک</span>
-          <img
-            className="brand-sun"
-            src={`${import.meta.env.BASE_URL}yamipick-sun.png`}
-            alt=""
-          />
+          <span className="brand-heart">🧡</span>
         </div>
         <button
           className="profile"
@@ -1307,7 +1325,7 @@ function App() {
             />
           </div>
         </section>
-
+        {/* ===== WEEKLY MEAL PLAN ===== */}
         <section className="week-section">
           <div className="section-heading">
             <div>
@@ -1325,6 +1343,8 @@ function App() {
               </button>
             </div>
           </div>
+
+          {/* ===== WEEKLY DAY AND MEAL LAYOUT ===== */}
 
           <div className="week-days">
             {days.map((day, index) => (
@@ -1345,7 +1365,6 @@ function App() {
             </h3>
 
             {renderMeal("lunch", "ناهار", "☀️", "lunch-card")}
-
             {renderMeal("dinner", "شام", "🌙", "dinner-card")}
           </div>
         </section>
@@ -1613,19 +1632,22 @@ function App() {
                   onKeyDown={(e) => e.key === "Enter" && saveMeal()}
                   autoFocus
                 />
-                {foodName.trim() && suggestions.length > 0 && (
-                  <div className="food-suggestions">
-                    {suggestions.map((food, index) => (
-                      <button
-                        key={index}
-                        type="button"
-                        onClick={() => setFoodName(food)}
-                      >
-                        {food}
-                      </button>
-                    ))}
-                  </div>
-                )}
+
+                {foodName.trim() &&
+                  !foods.some(
+                    (food) =>
+                      food.toLowerCase() === foodName.trim().toLowerCase(),
+                  ) && (
+                    <label className="add-to-food-bank">
+                      <input
+                        type="checkbox"
+                        checked={addToFoodBank}
+                        onChange={(e) => setAddToFoodBank(e.target.checked)}
+                      />
+                      <span>این غذا به بانک غذای من هم اضافه شود</span>
+                    </label>
+                  )}
+
                 <button className="save-food" onClick={saveMeal}>
                   ذخیره غذا
                 </button>
