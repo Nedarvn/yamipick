@@ -1333,8 +1333,8 @@ function App() {
                 className={`day ${selectedDay === index ? "active" : ""}`}
                 onClick={() => setSelectedDay(index)}
               >
-                <span>{day.name}</span>
-                <span>{day.date}</span>
+                <span className="day-name">{day.name}</span>
+                <span className="day-date">{day.date}</span>
               </button>
             ))}
           </div>
