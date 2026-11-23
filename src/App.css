@@ -1494,6 +1494,7 @@ input {
 .invite-copy-button.copied {
   background: #58a87a;
 }
+
 .food-suggestions {
   display: flex;
   flex-direction: column;
@@ -1743,4 +1744,17 @@ input {
   font-weight: 800;
   letter-spacing: -1px;
   text-shadow: 0 2px 3px rgba(150, 70, 15, 0.2);
+}
+.account-household.active-household {
+  background: #eff8ed;
+  border: 1px solid #c9e5c3;
+}
+.account-household .invite-copy-button:not(.copied) {
+  background: #f3f1ef !important;
+  border: 1px solid #e5dfda !important;
+  color: #655b55 !important;
+}
+
+.account-household .invite-copy-button:not(.copied):hover {
+  background: #eae6e2 !important;
 }

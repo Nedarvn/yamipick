@@ -1108,7 +1108,12 @@ function App() {
             ) : (
               <div className="account-household-list">
                 {households.map((home) => (
-                  <div className="account-household" key={home.id}>
+                  <div
+                    className={`account-household ${
+                      activeHousehold?.id === home.id ? "active-household" : ""
+                    }`}
+                    key={home.id}
+                  >
                     <div>
                       <strong>{home.name}</strong>
                       <small>
