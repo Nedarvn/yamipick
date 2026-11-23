@@ -1081,25 +1081,21 @@ function App() {
 
         <main className="main-content account-page">
           <section className="account-panel">
-            <h2>حساب کاربری من </h2>
-            <p>{session.user.email}</p>
+            <div className="account-profile">
+              <div className="account-avatar">
+                {session.user.email.charAt(0).toUpperCase()}
+              </div>
 
-            <div className="topbar-actions">
-              <button
-                className="profile"
-                onClick={() => setShowAccount(true)}
-                title="حساب کاربری"
-              >
-                <img
-                  src={`${import.meta.env.BASE_URL}yamipick-chef.png`}
-                  alt="آواتار کاربر"
-                />
-              </button>
-
-              <button className="logout-button" onClick={handleSignOut}>
-                خروج
-              </button>
+              <div className="account-details">
+                <h2>حساب کاربری من</h2>
+                <p>{session.user.email}</p>
+              </div>
             </div>
+
+            <button className="logout-button" onClick={handleSignOut}>
+              <span>⇥</span>
+              خروج از حساب
+            </button>
           </section>
 
           <section className="account-panel">
@@ -1175,6 +1171,7 @@ function App() {
               value={householdName}
               onChange={(e) => setHouseholdName(e.target.value)}
               placeholder="مثلاً خونه ما"
+              style={{ textAlign: "center" }}
             />
 
             <button
@@ -1193,7 +1190,7 @@ function App() {
               value={inviteCodeInput}
               onChange={(e) => setInviteCodeInput(e.target.value)}
               placeholder="کد دعوت رو وارد کن"
-              dir="ltr"
+              style={{ textAlign: "center" }}
             />
 
             <button
@@ -1227,10 +1224,15 @@ function App() {
               onClick={() => setShowAccount(true)}
               title="حساب کاربری"
             >
-              <img
-                src={`${import.meta.env.BASE_URL}yamipick-chef.png`}
-                alt="آواتار کاربر"
-              />
+              <span>
+                {(
+                  session.user.user_metadata?.full_name ||
+                  session.user.user_metadata?.name ||
+                  session.user.email
+                )
+                  ?.charAt(0)
+                  .toUpperCase()}
+              </span>
             </button>
 
             <button className="logout-button" onClick={handleSignOut}>
@@ -1304,10 +1306,15 @@ function App() {
           onClick={() => setShowAccount(true)}
           title="حساب کاربری"
         >
-          <img
-            src={`${import.meta.env.BASE_URL}yamipick-chef.png`}
-            alt="آواتار کاربر"
-          />
+          <span>
+            {(
+              session.user.user_metadata?.full_name ||
+              session.user.user_metadata?.name ||
+              session.user.email
+            )
+              ?.charAt(0)
+              .toUpperCase()}
+          </span>
         </button>
       </header>
 
