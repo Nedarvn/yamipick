@@ -1199,8 +1199,8 @@ input {
   }
 
   .welcome-pizza {
-    width: 110px;
-    height: 110px;
+    width: 100px;
+    height: 100px;
     flex-shrink: 0;
     transform: translateX(10px);
   }
@@ -1531,7 +1531,7 @@ input {
 }
 
 .welcome-pizza img {
-  width: 100%;
+  width: 90%;
   height: 100%;
   object-fit: contain;
   display: block;
@@ -1757,4 +1757,10 @@ input {
 
 .account-household .invite-copy-button:not(.copied):hover {
   background: #eae6e2 !important;
+}
+.brand-logo {
+  width: 120px;
+  height: auto;
+  display: block;
+  object-fit: contain;
 }

@@ -1067,8 +1067,11 @@ function App() {
       <div className="app" dir="rtl">
         <header className="topbar">
           <div className="brand">
-            <span>یامی‌پیک</span>
-            <span className="brand-heart">🧡</span>
+            <img
+              src="/yamipick/YamiPick-logo.png"
+              alt="یامی‌پیک"
+              className="brand-logo"
+            />
           </div>
 
           <button
@@ -1219,8 +1222,11 @@ function App() {
       <div className="app" dir="rtl">
         <header className="topbar">
           <div className="brand">
-            <span>یامی‌پیک</span>
-            <span className="brand-heart">🧡</span>
+            <img
+              src="/yamipick/YamiPick-logo.png"
+              alt="یامی‌پیک"
+              className="brand-logo"
+            />
           </div>
 
           <div className="topbar-actions">
@@ -1303,8 +1309,11 @@ function App() {
     <div className="app" dir="rtl">
       <header className="topbar">
         <div className="brand">
-          <span>یامی‌پیک</span>
-          <span className="brand-heart">🧡</span>
+          <img
+            src="/yamipick/YamiPick-logo.png"
+            alt="یامی‌پیک"
+            className="brand-logo"
+          />
         </div>
         <button
           className="profile"
@@ -1332,7 +1341,7 @@ function App() {
           </div>
           <div className="welcome-pizza">
             <img
-              src={`${import.meta.env.BASE_URL}yamipick-pizza.png`}
+              src={`${import.meta.env.BASE_URL}yamipick-pot.png`}
               alt="یامی‌پیک"
             />
           </div>
